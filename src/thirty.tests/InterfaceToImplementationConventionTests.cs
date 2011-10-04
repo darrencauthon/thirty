@@ -107,25 +107,55 @@ namespace thirty.tests
         private static IDictionary<Type, Type> results;
     }
 
-    [Subject(typeof(InterfaceToImplementationConvention))]
+    [Subject(typeof (InterfaceToImplementationConvention))]
     public class when_one_interface_with_non_matching_types_exist
     {
         private Establish context =
             () =>
-            {
-                var assembly = typeof(InterfaceToImplementationConvention).Assembly;
+                {
+                    var assembly = typeof (InterfaceToImplementationConvention).Assembly;
 
-                StaticMethods.SetInterfacesFunc(a => new[] { typeof(ITestInterface1) });
-                StaticMethods.SetConcreteTypesFunc(c => new Type[] { typeof(ClassWithNoInterfaces) });
+                    StaticMethods.SetInterfacesFunc(a => new[] {typeof (ITestInterface1)});
+                    StaticMethods.SetConcreteTypesFunc(c => new[] {typeof (ClassWithNoInterfaces)});
 
-                convention = new InterfaceToImplementationConvention(assembly);
-            };
+                    convention = new InterfaceToImplementationConvention(assembly);
+                };
 
         private Because of =
             () => results = convention.GetMatches();
 
         private It should_return_no_results =
             () => results.Keys.Count.ShouldEqual(0);
+
+        private static InterfaceToImplementationConvention convention;
+        private static IDictionary<Type, Type> results;
+    }
+
+    [Subject(typeof (InterfaceToImplementationConvention))]
+    public class when_one_interface_with_many_different_types_and_one_match_exists
+    {
+        private Establish context =
+            () =>
+                {
+                    var assembly = typeof (InterfaceToImplementationConvention).Assembly;
+
+                    StaticMethods.SetInterfacesFunc(a => new[] {typeof (ITestInterface1)});
+                    StaticMethods.SetConcreteTypesFunc(c => new[]
+                                                                {
+                                                                    typeof (string), typeof (int), typeof (TestInterface1Implementation), typeof (decimal)
+                                                                });
+
+                    convention = new InterfaceToImplementationConvention(assembly);
+                };
+
+        private Because of =
+            () => results = convention.GetMatches();
+
+        private It should_return_one_result =
+            () => results.Keys.Count.ShouldEqual(1);
+
+        private It should_return_the_match =
+            () => results[typeof (ITestInterface1)].ShouldEqual(typeof (TestInterface1Implementation));
 
         private static InterfaceToImplementationConvention convention;
         private static IDictionary<Type, Type> results;

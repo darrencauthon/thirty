@@ -18,7 +18,8 @@ namespace thirty
             foreach (var @interface in StaticMethods.GetInterfaces(null))
             {
                 if (StaticMethods.GetConcreteTypes(null).Where(x => x.GetInterfaces().Contains(@interface)).Count() == 1)
-                    dictionary[@interface] = StaticMethods.GetConcreteTypes(null).First();
+                    dictionary[@interface] = StaticMethods.GetConcreteTypes(null)
+                        .Where(x => x.GetInterfaces().Contains(@interface)).First();
             }
 
             return dictionary;
