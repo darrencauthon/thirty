@@ -7,11 +7,8 @@ namespace thirty
 {
     public class InterfaceToImplementationConvention
     {
-        private readonly Assembly assembly;
-
         public InterfaceToImplementationConvention(Assembly assembly)
         {
-            this.assembly = assembly;
         }
 
         public IDictionary<Type, Type> GetMatches()
@@ -19,7 +16,10 @@ namespace thirty
             var dictionary = new Dictionary<Type, Type>();
 
             foreach (var @interface in StaticMethods.GetInterfaces(null))
-                dictionary[@interface] = StaticMethods.GetConcreteTypes(null).First();
+            {
+                if (StaticMethods.GetConcreteTypes(null).Where(x => x.GetInterfaces().Contains(@interface)).Count() == 1)
+                    dictionary[@interface] = StaticMethods.GetConcreteTypes(null).First();
+            }
 
             return dictionary;
         }

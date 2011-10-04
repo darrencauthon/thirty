@@ -53,4 +53,81 @@ namespace thirty.tests
         private static InterfaceToImplementationConvention convention;
         private static IDictionary<Type, Type> results;
     }
+
+    [Subject(typeof (InterfaceToImplementationConvention))]
+    public class when_one_interface_with_two_matching_types_exist
+    {
+        private Establish context =
+            () =>
+                {
+                    var assembly = typeof (InterfaceToImplementationConvention).Assembly;
+
+                    StaticMethods.SetInterfacesFunc(a => new[] {typeof (ITestInterface1)});
+                    StaticMethods.SetConcreteTypesFunc(c => new[]
+                                                                {
+                                                                    typeof (TestInterface1Implementation),
+                                                                    typeof (TestInterface1Implementation2)
+                                                                }
+                        );
+
+                    convention = new InterfaceToImplementationConvention(assembly);
+                };
+
+        private Because of =
+            () => results = convention.GetMatches();
+
+        private It should_return_no_results =
+            () => results.Keys.Count.ShouldEqual(0);
+
+        private static InterfaceToImplementationConvention convention;
+        private static IDictionary<Type, Type> results;
+    }
+
+    [Subject(typeof (InterfaceToImplementationConvention))]
+    public class when_one_interface_with_no_matching_types_exist
+    {
+        private Establish context =
+            () =>
+                {
+                    var assembly = typeof (InterfaceToImplementationConvention).Assembly;
+
+                    StaticMethods.SetInterfacesFunc(a => new[] {typeof (ITestInterface1)});
+                    StaticMethods.SetConcreteTypesFunc(c => new Type[] {});
+
+                    convention = new InterfaceToImplementationConvention(assembly);
+                };
+
+        private Because of =
+            () => results = convention.GetMatches();
+
+        private It should_return_no_results =
+            () => results.Keys.Count.ShouldEqual(0);
+
+        private static InterfaceToImplementationConvention convention;
+        private static IDictionary<Type, Type> results;
+    }
+
+    [Subject(typeof(InterfaceToImplementationConvention))]
+    public class when_one_interface_with_non_matching_types_exist
+    {
+        private Establish context =
+            () =>
+            {
+                var assembly = typeof(InterfaceToImplementationConvention).Assembly;
+
+                StaticMethods.SetInterfacesFunc(a => new[] { typeof(ITestInterface1) });
+                StaticMethods.SetConcreteTypesFunc(c => new Type[] { typeof(ClassWithNoInterfaces) });
+
+                convention = new InterfaceToImplementationConvention(assembly);
+            };
+
+        private Because of =
+            () => results = convention.GetMatches();
+
+        private It should_return_no_results =
+            () => results.Keys.Count.ShouldEqual(0);
+
+        private static InterfaceToImplementationConvention convention;
+        private static IDictionary<Type, Type> results;
+    }
 }
