@@ -1,0 +1,14 @@
+*ReSharper*
+*resharper*
+*.suo
+*.cache
+obj
+bin
+*.csproj.user
+* Thumbs.db
+*.cache
+*.log
+*.user
+*.gpState
+*.dotCover
+TestResults
