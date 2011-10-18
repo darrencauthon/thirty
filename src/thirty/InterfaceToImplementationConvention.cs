@@ -16,6 +16,12 @@ namespace thirty
             interfaces = () => StaticMethods.GetInterfaces(assembly);
         }
 
+        public InterfaceToImplementationConvention(IEnumerable<Assembly> assemblies)
+        {
+            concreteTypes = () => assemblies.SelectMany(StaticMethods.GetConcreteTypes);
+            interfaces = () => assemblies.SelectMany(StaticMethods.GetInterfaces);
+        }
+
         public IDictionary<Type, Type> GetMatches()
         {
             var dictionary = new Dictionary<Type, Type>();

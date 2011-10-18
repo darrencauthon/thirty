@@ -75,6 +75,10 @@
       <Project>{08D4B290-2C17-4C27-AA40-2F3272F0A5F6}</Project>
       <Name>TestAssembly1</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestAssembly2\TestAssembly2.csproj">
+      <Project>{06811285-4996-41C6-AB0E-35506B3ABAD7}</Project>
+      <Name>TestAssembly2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\thirty\thirty.csproj">
       <Project>{A7C0A95C-EE52-4694-B11E-05DC558DF41C}</Project>
       <Name>thirty</Name>
