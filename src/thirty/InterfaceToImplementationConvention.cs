@@ -10,6 +10,8 @@ namespace thirty
         private readonly Func<IEnumerable<Type>> concreteTypes;
         private readonly Func<IEnumerable<Type>> interfaces;
 
+        private readonly List<Type> typesToIgnore = new List<Type>();
+
         public InterfaceToImplementationConvention(Assembly assembly)
         {
             concreteTypes = () => StaticMethods.GetConcreteTypes(assembly);
@@ -26,7 +28,7 @@ namespace thirty
         {
             var dictionary = new Dictionary<Type, Type>();
 
-            foreach (var @interface in interfaces())
+            foreach (var @interface in interfaces().Where(x => typesToIgnore.Contains(x) == false))
             {
                 var implementations = concreteTypes().Where(ImplementThisInterface(@interface));
                 if (ThereIsOnlyOneImplementation(implementations))
@@ -44,6 +46,11 @@ namespace thirty
         private static Func<Type, bool> ImplementThisInterface(Type @interface)
         {
             return x => x.GetInterfaces().Contains(@interface);
+        }
+
+        public void IgnoreType(Type type)
+        {
+            typesToIgnore.Add(type);
         }
     }
 }
