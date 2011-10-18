@@ -28,15 +28,25 @@ namespace thirty
         {
             var dictionary = new Dictionary<Type, Type>();
 
-            foreach (var @interface in interfaces().Where(x => typesToIgnore.Contains(x) == false))
+            foreach (var @interface in GetAllInterfaces())
             {
-                var implementations = concreteTypes().Where(ImplementThisInterface(@interface))
-                    .Where(x=>typesToIgnore.Contains(x) == false);
+                var implementations = GetImplementationsOfThisInterface(@interface);
                 if (ThereIsOnlyOneImplementation(implementations))
                     dictionary[@interface] = implementations.Single();
             }
 
             return dictionary;
+        }
+
+        private IEnumerable<Type> GetAllInterfaces()
+        {
+            return interfaces().Where(x => typesToIgnore.Contains(x) == false);
+        }
+
+        private IEnumerable<Type> GetImplementationsOfThisInterface(Type @interface)
+        {
+            return concreteTypes().Where(ImplementThisInterface(@interface))
+                .Where(x => typesToIgnore.Contains(x) == false);
         }
 
         private static bool ThereIsOnlyOneImplementation(IEnumerable<Type> implementations)
