@@ -22,7 +22,7 @@ namespace thirty
 
             foreach (var @interface in interfaces())
             {
-                var implementations = ConcreteTypes().Where(ThatImplementThisInterface(@interface));
+                var implementations = concreteTypes().Where(ImplementThisInterface(@interface));
                 if (ThereIsOnlyOneImplementation(implementations))
                     dictionary[@interface] = implementations.Single();
             }
@@ -35,14 +35,9 @@ namespace thirty
             return implementations.Count() == 1;
         }
 
-        private Func<Type, bool> ThatImplementThisInterface(Type @interface)
+        private static Func<Type, bool> ImplementThisInterface(Type @interface)
         {
             return x => x.GetInterfaces().Contains(@interface);
-        }
-
-        private IEnumerable<Type> ConcreteTypes()
-        {
-            return concreteTypes();
         }
     }
 }
