@@ -12,8 +12,8 @@ namespace thirty
 
         public InterfaceToImplementationConvention(Assembly assembly)
         {
-            concreteTypes = () => StaticMethods.GetConcreteTypes(null);
-            interfaces = () => StaticMethods.GetInterfaces(null);
+            concreteTypes = () => StaticMethods.GetConcreteTypes(assembly);
+            interfaces = () => StaticMethods.GetInterfaces(assembly);
         }
 
         public IDictionary<Type, Type> GetMatches()
