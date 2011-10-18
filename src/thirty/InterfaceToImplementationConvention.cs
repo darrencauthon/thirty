@@ -26,32 +26,31 @@ namespace thirty
 
         public IDictionary<Type, Type> GetMatches()
         {
-            var dictionary = new Dictionary<Type, Type>();
+            return GetAllInterfacesWithOneImplementation()
+                .ToDictionary(x => x, GetTheSingleImplementationOfThisInterface);
+        }
 
-            foreach (var @interface in GetAllInterfaces())
-            {
-                var implementations = GetImplementationsOfThisInterface(@interface);
-                if (ThereIsOnlyOneImplementation(implementations))
-                    dictionary[@interface] = implementations.Single();
-            }
+        private Type GetTheSingleImplementationOfThisInterface(Type @interface)
+        {
+            return GetImplementationsOfThisInterface(@interface).Single();
+        }
 
-            return dictionary;
+        private IEnumerable<Type> GetAllInterfacesWithOneImplementation()
+        {
+            return GetAllInterfaces()
+                .Where(@interface => GetImplementationsOfThisInterface(@interface).Count() == 1);
         }
 
         private IEnumerable<Type> GetAllInterfaces()
         {
-            return interfaces().Where(x => typesToIgnore.Contains(x) == false);
+            return interfaces()
+                .Where(x => typesToIgnore.Contains(x) == false);
         }
 
         private IEnumerable<Type> GetImplementationsOfThisInterface(Type @interface)
         {
             return concreteTypes().Where(ImplementThisInterface(@interface))
                 .Where(x => typesToIgnore.Contains(x) == false);
-        }
-
-        private static bool ThereIsOnlyOneImplementation(IEnumerable<Type> implementations)
-        {
-            return implementations.Count() == 1;
         }
 
         private static Func<Type, bool> ImplementThisInterface(Type @interface)
