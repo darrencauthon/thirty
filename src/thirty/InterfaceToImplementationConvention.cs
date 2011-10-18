@@ -7,15 +7,20 @@ namespace thirty
 {
     public class InterfaceToImplementationConvention
     {
+        private readonly Func<IEnumerable<Type>> concreteTypes;
+        private readonly Func<IEnumerable<Type>> interfaces;
+
         public InterfaceToImplementationConvention(Assembly assembly)
         {
+            concreteTypes = () => StaticMethods.GetConcreteTypes(null);
+            interfaces = () => StaticMethods.GetInterfaces(null);
         }
 
         public IDictionary<Type, Type> GetMatches()
         {
             var dictionary = new Dictionary<Type, Type>();
 
-            foreach (var @interface in StaticMethods.GetInterfaces(null))
+            foreach (var @interface in interfaces())
             {
                 var implementations = ConcreteTypes().Where(ThatImplementThisInterface(@interface));
                 if (ThereIsOnlyOneImplementation(implementations))
@@ -37,7 +42,7 @@ namespace thirty
 
         private IEnumerable<Type> ConcreteTypes()
         {
-            return StaticMethods.GetConcreteTypes(null);
+            return concreteTypes();
         }
     }
 }
