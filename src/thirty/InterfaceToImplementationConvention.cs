@@ -17,12 +17,27 @@ namespace thirty
 
             foreach (var @interface in StaticMethods.GetInterfaces(null))
             {
-                if (StaticMethods.GetConcreteTypes(null).Where(x => x.GetInterfaces().Contains(@interface)).Count() == 1)
-                    dictionary[@interface] = StaticMethods.GetConcreteTypes(null)
-                        .Where(x => x.GetInterfaces().Contains(@interface)).First();
+                var implementations = ConcreteTypes().Where(ThatImplementThisInterface(@interface));
+                if (ThereIsOnlyOneImplementation(implementations))
+                    dictionary[@interface] = implementations.Single();
             }
 
             return dictionary;
+        }
+
+        private static bool ThereIsOnlyOneImplementation(IEnumerable<Type> implementations)
+        {
+            return implementations.Count() == 1;
+        }
+
+        private Func<Type, bool> ThatImplementThisInterface(Type @interface)
+        {
+            return x => x.GetInterfaces().Contains(@interface);
+        }
+
+        private IEnumerable<Type> ConcreteTypes()
+        {
+            return StaticMethods.GetConcreteTypes(null);
         }
     }
 }
