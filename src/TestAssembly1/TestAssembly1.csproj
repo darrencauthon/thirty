@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Black.cs" />
     <Compile Include="IColor.cs" />
+    <Compile Include="One.cs" />
     <Compile Include="Tiger.cs" />
     <Compile Include="Duck.cs" />
     <Compile Include="IBird.cs" />
@@ -49,6 +50,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IUnusedInterface.cs" />
     <Compile Include="White.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TestAssembly2\TestAssembly2.csproj">
+      <Project>{06811285-4996-41C6-AB0E-35506B3ABAD7}</Project>
+      <Name>TestAssembly2</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -40,7 +40,7 @@ namespace thirty.specs
             () => results = convention.GetMatches();
 
         private It should_return_three_results =
-            () => results.Count().ShouldEqual(3);
+            () => results.Count().ShouldEqual(4);
 
         private It should_match_duck_to_bird =
             () => results[typeof (IBird)].ShouldEqual(typeof (Duck));
@@ -50,6 +50,9 @@ namespace thirty.specs
 
         private It should_match_usa_to_country =
             () => results[typeof (ICountry)].ShouldEqual(typeof (UnitedStatesOfAmerica));
+
+        private It should_match_age_to_one =
+            () => results[typeof (IAge)].ShouldEqual(typeof (One));
 
         private static InterfaceToImplementationConvention convention;
         private static IDictionary<Type, Type> results;
