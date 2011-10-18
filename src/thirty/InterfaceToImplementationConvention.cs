@@ -30,7 +30,8 @@ namespace thirty
 
             foreach (var @interface in interfaces().Where(x => typesToIgnore.Contains(x) == false))
             {
-                var implementations = concreteTypes().Where(ImplementThisInterface(@interface));
+                var implementations = concreteTypes().Where(ImplementThisInterface(@interface))
+                    .Where(x=>typesToIgnore.Contains(x) == false);
                 if (ThereIsOnlyOneImplementation(implementations))
                     dictionary[@interface] = implementations.Single();
             }
