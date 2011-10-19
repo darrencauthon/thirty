@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Machine.Specifications;
+using NUnit.Framework;
 
 namespace thirty.tests
 {
@@ -190,24 +192,24 @@ namespace thirty.tests
         private static IDictionary<Type, Type> results;
     }
 
-    [Subject(typeof(InterfaceToImplementationConvention))]
+    [Subject(typeof (InterfaceToImplementationConvention))]
     public class when_one_match_exists_but_the_concrete_type_is_ignored
     {
         private Establish context =
             () =>
-            {
-                var assembly = typeof(InterfaceToImplementationConvention).Assembly;
+                {
+                    var assembly = typeof (InterfaceToImplementationConvention).Assembly;
 
-                StaticMethods.SetInterfacesFunc(a => new[] { typeof(ITestInterface1) });
-                StaticMethods.SetConcreteTypesFunc(c => new[]
+                    StaticMethods.SetInterfacesFunc(a => new[] {typeof (ITestInterface1)});
+                    StaticMethods.SetConcreteTypesFunc(c => new[]
                                                                 {
                                                                     typeof (string), typeof (int), typeof (TestInterface1Implementation), typeof (decimal)
                                                                 });
 
-                convention = new InterfaceToImplementationConvention(assembly);
+                    convention = new InterfaceToImplementationConvention(assembly);
 
-                convention.IgnoreType(typeof(TestInterface1Implementation));
-            };
+                    convention.IgnoreType(typeof (TestInterface1Implementation));
+                };
 
         private Because of =
             () => results = convention.GetMatches();
@@ -219,24 +221,24 @@ namespace thirty.tests
         private static IDictionary<Type, Type> results;
     }
 
-    [Subject(typeof(InterfaceToImplementationConvention))]
+    [Subject(typeof (InterfaceToImplementationConvention))]
     public class when_a_type_is_set_manually
     {
         private Establish context =
             () =>
-            {
-                var assembly = typeof(InterfaceToImplementationConvention).Assembly;
+                {
+                    var assembly = typeof (InterfaceToImplementationConvention).Assembly;
 
-                StaticMethods.SetInterfacesFunc(a => new[] { typeof(ITestInterface1) });
-                StaticMethods.SetConcreteTypesFunc(c => new[]
+                    StaticMethods.SetInterfacesFunc(a => new[] {typeof (ITestInterface1)});
+                    StaticMethods.SetConcreteTypesFunc(c => new[]
                                                                 {
                                                                     typeof (string), typeof (int), typeof (decimal)
                                                                 });
 
-                convention = new InterfaceToImplementationConvention(assembly);
+                    convention = new InterfaceToImplementationConvention(assembly);
 
-                convention.SetMatch(typeof(ITestInterface1), typeof(TestInterface1Implementation));
-            };
+                    convention.SetMatch(typeof (ITestInterface1), typeof (TestInterface1Implementation));
+                };
 
         private Because of =
             () => results = convention.GetMatches();
@@ -251,4 +253,37 @@ namespace thirty.tests
         private static IDictionary<Type, Type> results;
     }
 
+    [Subject(typeof (InterfaceToImplementationConvention))]
+    public class when_a_type_is_set_with_a_func
+    {
+        private Establish context =
+            () =>
+                {
+                    var assembly = typeof (InterfaceToImplementationConvention).Assembly;
+
+                    StaticMethods.SetInterfacesFunc(a => new[] {typeof (ITestInterface1)});
+                    StaticMethods.SetConcreteTypesFunc(c => new[]
+                                                                {
+                                                                    typeof (string), typeof (int), typeof (decimal)
+                                                                });
+
+                    convention = new InterfaceToImplementationConvention(assembly);
+
+                    func = () => new TestInterface1Implementation();
+                    convention.SetFunctionMatch<ITestInterface1>(func);
+                };
+
+        private Because of =
+            () => results = convention.GetMatches();
+
+        private It should_not_return_the_interface_in_the_results =
+            () => results.ContainsKey(typeof (ITestInterface1)).ShouldBeFalse();
+
+        private It should_return_the_func_match =
+            () => Assert.AreEqual(func, convention.GetFuncMatches()[typeof (ITestInterface1)]);
+
+        private static InterfaceToImplementationConvention convention;
+        private static IDictionary<Type, Type> results;
+        private static Func<ITestInterface1> func;
+    }
 }

@@ -12,6 +12,7 @@ namespace thirty
 
         private readonly List<Type> typesToIgnore = new List<Type>();
         private readonly Dictionary<Type, Type> manualMatches = new Dictionary<Type, Type>();
+        private readonly Dictionary<Type, dynamic> functionMatches = new Dictionary<Type, dynamic>();
 
         public InterfaceToImplementationConvention(Assembly assembly)
         {
@@ -72,6 +73,17 @@ namespace thirty
         private static Func<Type, bool> ImplementThisInterface(Type @interface)
         {
             return x => x.GetInterfaces().Contains(@interface);
+        }
+
+        public virtual void SetFunctionMatch<T>(Func<T> func)
+        {
+            typesToIgnore.Add(typeof (T));
+            functionMatches.Add(typeof(T), func);
+        }
+
+        public IDictionary<Type, dynamic> GetFuncMatches()
+        {
+            return functionMatches;
         }
     }
 }

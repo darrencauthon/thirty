@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMoq.Helpers;
 using Machine.Specifications;
+using NUnit.Framework;
 using TestAssembly1;
 using TestAssembly2;
 
@@ -81,15 +82,15 @@ namespace thirty.specs
         private static IDictionary<Type, Type> results;
     }
 
-    [Subject(typeof(InterfaceToImplementationConvention))]
+    [Subject(typeof (InterfaceToImplementationConvention))]
     public class when_ignoring_one_concrete_type_in_test_assembly1 : with_automoqer
     {
         private Establish context =
             () =>
-            {
-                convention = new InterfaceToImplementationConvention(typeof(IBird).Assembly);
-                convention.IgnoreType(typeof(Duck));
-            };
+                {
+                    convention = new InterfaceToImplementationConvention(typeof (IBird).Assembly);
+                    convention.IgnoreType(typeof (Duck));
+                };
 
         private Because of =
             () => results = convention.GetMatches();
@@ -98,7 +99,7 @@ namespace thirty.specs
             () => results.Count().ShouldEqual(1);
 
         private It should_match_tiger_to_cat =
-            () => results[typeof(ICat)].ShouldEqual(typeof(Tiger));
+            () => results[typeof (ICat)].ShouldEqual(typeof (Tiger));
 
         private static InterfaceToImplementationConvention convention;
         private static IDictionary<Type, Type> results;
@@ -109,20 +110,55 @@ namespace thirty.specs
     {
         private Establish context =
             () =>
-            {
-                convention = new InterfaceToImplementationConvention(typeof(IFruit).Assembly);
-                convention.IgnoreType(typeof(Duck));
+                {
+                    convention = new InterfaceToImplementationConvention(typeof (IFruit).Assembly);
+                    convention.IgnoreType(typeof (Duck));
 
-                convention.SetMatch(typeof (IFruit), typeof (Apple));
-            };
+                    convention.SetMatch(typeof (IFruit), typeof (Apple));
+                };
 
         private Because of =
             () => results = convention.GetMatches();
 
         private It should_match_tiger_to_cat =
-            () => results[typeof(IFruit)].ShouldEqual(typeof(Apple));
+            () => results[typeof (IFruit)].ShouldEqual(typeof (Apple));
 
         private static InterfaceToImplementationConvention convention;
         private static IDictionary<Type, Type> results;
+    }
+
+    [Subject(typeof (InterfaceToImplementationConvention))]
+    public class when_setting_the_type_with_a_function : with_automoqer
+    {
+        private Establish context =
+            () =>
+                {
+                    convention = new InterfaceToImplementationConvention(typeof (ICountry).Assembly);
+                    unitedStatesOfAmerica = new UnitedStatesOfAmerica();
+                    func = () => unitedStatesOfAmerica;
+                    convention.SetFunctionMatch(func);
+                };
+
+        private Because of =
+            () => results = convention.GetMatches();
+
+        private It should_not_return_ICountry_with_matches =
+            () => results.ContainsKey(typeof (ICountry)).ShouldBeFalse();
+
+        private It should_return_the_func =
+            () => Assert.AreSame(func, convention.GetFuncMatches()[typeof (ICountry)]);
+
+        private It should_return_a_func_that_can_be_called =
+            () =>
+                {
+                    var funcMatch = convention.GetFuncMatches()[typeof (ICountry)];
+                    UnitedStatesOfAmerica usa = funcMatch();
+                    Assert.AreSame(funcMatch(), usa);
+                };
+
+        private static InterfaceToImplementationConvention convention;
+        private static IDictionary<Type, Type> results;
+        private static Func<ICountry> func;
+        private static UnitedStatesOfAmerica unitedStatesOfAmerica;
     }
 }
