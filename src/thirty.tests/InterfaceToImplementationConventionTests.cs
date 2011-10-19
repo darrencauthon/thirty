@@ -20,7 +20,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_no_results =
             () => results.Keys.Count.ShouldEqual(0);
@@ -44,7 +44,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_one_result =
             () => results.Keys.Count.ShouldEqual(1);
@@ -76,7 +76,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_no_results =
             () => results.Keys.Count.ShouldEqual(0);
@@ -100,7 +100,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_no_results =
             () => results.Keys.Count.ShouldEqual(0);
@@ -124,7 +124,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_no_results =
             () => results.Keys.Count.ShouldEqual(0);
@@ -151,7 +151,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_one_result =
             () => results.Keys.Count.ShouldEqual(1);
@@ -183,7 +183,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_one_result =
             () => results.Keys.Count.ShouldEqual(0);
@@ -212,7 +212,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_one_result =
             () => results.Keys.Count.ShouldEqual(0);
@@ -237,11 +237,11 @@ namespace thirty.tests
 
                     convention = new InterfaceToImplementationConvention(assembly);
 
-                    convention.SetMatch(typeof (ITestInterface1), typeof (TestInterface1Implementation));
+                    convention.SetTypeMatch(typeof (ITestInterface1), typeof (TestInterface1Implementation));
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_one_result =
             () => results.Keys.Count.ShouldEqual(1);
@@ -274,7 +274,7 @@ namespace thirty.tests
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_not_return_the_interface_in_the_results =
             () => results.ContainsKey(typeof (ITestInterface1)).ShouldBeFalse();

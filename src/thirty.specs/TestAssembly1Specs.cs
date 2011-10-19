@@ -16,7 +16,7 @@ namespace thirty.specs
             () => { convention = new InterfaceToImplementationConvention(typeof (IBird).Assembly); };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_two_result =
             () => results.Count().ShouldEqual(2);
@@ -38,7 +38,7 @@ namespace thirty.specs
             () => { convention = new InterfaceToImplementationConvention(new[] {typeof (IBird).Assembly, typeof (ICountry).Assembly}); };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_three_results =
             () => results.Count().ShouldEqual(4);
@@ -70,7 +70,7 @@ namespace thirty.specs
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_two_result =
             () => results.Count().ShouldEqual(1);
@@ -93,7 +93,7 @@ namespace thirty.specs
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_return_two_result =
             () => results.Count().ShouldEqual(1);
@@ -114,11 +114,11 @@ namespace thirty.specs
                     convention = new InterfaceToImplementationConvention(typeof (IFruit).Assembly);
                     convention.IgnoreType(typeof (Duck));
 
-                    convention.SetMatch(typeof (IFruit), typeof (Apple));
+                    convention.SetTypeMatch(typeof (IFruit), typeof (Apple));
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_match_tiger_to_cat =
             () => results[typeof (IFruit)].ShouldEqual(typeof (Apple));
@@ -140,7 +140,7 @@ namespace thirty.specs
                 };
 
         private Because of =
-            () => results = convention.GetMatches();
+            () => results = convention.GetTypeMatches();
 
         private It should_not_return_ICountry_with_matches =
             () => results.ContainsKey(typeof (ICountry)).ShouldBeFalse();

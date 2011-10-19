@@ -26,7 +26,7 @@ namespace thirty
             interfaces = () => assemblies.SelectMany(StaticMethods.GetInterfaces);
         }
 
-        public IDictionary<Type, Type> GetMatches()
+        public IDictionary<Type, Type> GetTypeMatches()
         {
             var dictionary = GetAllInterfacesWithOneImplementation()
                 .ToDictionary(x => x, GetTheSingleImplementationOfThisInterface);
@@ -42,9 +42,20 @@ namespace thirty
             typesToIgnore.Add(type);
         }
 
-        public virtual void SetMatch(Type @interface, Type implementation)
+        public virtual void SetTypeMatch(Type @interface, Type implementation)
         {
             manualMatches[@interface] = implementation;
+        }
+
+        public virtual void SetFunctionMatch<T>(Func<T> func)
+        {
+            typesToIgnore.Add(typeof (T));
+            functionMatches.Add(typeof (T), func);
+        }
+
+        public IDictionary<Type, dynamic> GetFuncMatches()
+        {
+            return functionMatches;
         }
 
         private Type GetTheSingleImplementationOfThisInterface(Type @interface)
@@ -73,17 +84,6 @@ namespace thirty
         private static Func<Type, bool> ImplementThisInterface(Type @interface)
         {
             return x => x.GetInterfaces().Contains(@interface);
-        }
-
-        public virtual void SetFunctionMatch<T>(Func<T> func)
-        {
-            typesToIgnore.Add(typeof (T));
-            functionMatches.Add(typeof(T), func);
-        }
-
-        public IDictionary<Type, dynamic> GetFuncMatches()
-        {
-            return functionMatches;
         }
     }
 }
