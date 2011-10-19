@@ -36,6 +36,16 @@ namespace thirty
             return dictionary;
         }
 
+        public void IgnoreType(Type type)
+        {
+            typesToIgnore.Add(type);
+        }
+
+        public virtual void SetMatch(Type @interface, Type implementation)
+        {
+            manualMatches[@interface] = implementation;
+        }
+
         private Type GetTheSingleImplementationOfThisInterface(Type @interface)
         {
             return GetImplementationsOfThisInterface(@interface).Single();
@@ -62,16 +72,6 @@ namespace thirty
         private static Func<Type, bool> ImplementThisInterface(Type @interface)
         {
             return x => x.GetInterfaces().Contains(@interface);
-        }
-
-        public void IgnoreType(Type type)
-        {
-            typesToIgnore.Add(type);
-        }
-
-        public virtual void SetMatch(Type @interface, Type implementation)
-        {
-            manualMatches[@interface] = implementation;
         }
     }
 }
