@@ -103,4 +103,26 @@ namespace thirty.specs
         private static InterfaceToImplementationConvention convention;
         private static IDictionary<Type, Type> results;
     }
+
+    [Subject(typeof (InterfaceToImplementationConvention))]
+    public class when_setting_the_type_manually : with_automoqer
+    {
+        private Establish context =
+            () =>
+            {
+                convention = new InterfaceToImplementationConvention(typeof(IFruit).Assembly);
+                convention.IgnoreType(typeof(Duck));
+
+                convention.SetMatch(typeof (IFruit), typeof (Apple));
+            };
+
+        private Because of =
+            () => results = convention.GetMatches();
+
+        private It should_match_tiger_to_cat =
+            () => results[typeof(IFruit)].ShouldEqual(typeof(Apple));
+
+        private static InterfaceToImplementationConvention convention;
+        private static IDictionary<Type, Type> results;
+    }
 }

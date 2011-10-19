@@ -40,8 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Apple.cs" />
     <Compile Include="IAge.cs" />
     <Compile Include="ICountry.cs" />
+    <Compile Include="IFruit.cs" />
+    <Compile Include="Orange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitedStatesOfAmerica.cs" />
   </ItemGroup>

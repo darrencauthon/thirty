@@ -11,6 +11,7 @@ namespace thirty
         private readonly Func<IEnumerable<Type>> interfaces;
 
         private readonly List<Type> typesToIgnore = new List<Type>();
+        private readonly Dictionary<Type, Type> manualMatches = new Dictionary<Type, Type>();
 
         public InterfaceToImplementationConvention(Assembly assembly)
         {
@@ -26,8 +27,13 @@ namespace thirty
 
         public IDictionary<Type, Type> GetMatches()
         {
-            return GetAllInterfacesWithOneImplementation()
+            var dictionary = GetAllInterfacesWithOneImplementation()
                 .ToDictionary(x => x, GetTheSingleImplementationOfThisInterface);
+
+            foreach (var key in manualMatches.Keys)
+                dictionary[key] = manualMatches[key];
+
+            return dictionary;
         }
 
         private Type GetTheSingleImplementationOfThisInterface(Type @interface)
@@ -61,6 +67,11 @@ namespace thirty
         public void IgnoreType(Type type)
         {
             typesToIgnore.Add(type);
+        }
+
+        public virtual void SetMatch(Type @interface, Type implementation)
+        {
+            manualMatches[@interface] = implementation;
         }
     }
 }
