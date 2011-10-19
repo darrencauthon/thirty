@@ -5,7 +5,16 @@ using System.Reflection;
 
 namespace thirty
 {
-    public class InterfaceToImplementationConvention
+    public interface IInterfaceToImplementationConvention
+    {
+        IDictionary<Type, Type> GetTypeMatches();
+        void IgnoreType(Type type);
+        void SetTypeMatch(Type @interface, Type implementation);
+        void SetFunctionMatch<T>(Func<T> func);
+        IDictionary<Type, object> GetFuncMatches();
+    }
+
+    public class InterfaceToImplementationConvention : IInterfaceToImplementationConvention
     {
         private readonly Func<IEnumerable<Type>> concreteTypes;
         private readonly Func<IEnumerable<Type>> interfaces;
@@ -26,7 +35,7 @@ namespace thirty
             interfaces = () => assemblies.SelectMany(StaticMethods.GetInterfaces);
         }
 
-        public IDictionary<Type, Type> GetTypeMatches()
+        public virtual IDictionary<Type, Type> GetTypeMatches()
         {
             var dictionary = GetAllInterfacesWithOneImplementation()
                 .ToDictionary(x => x, GetTheSingleImplementationOfThisInterface);
@@ -37,7 +46,7 @@ namespace thirty
             return dictionary;
         }
 
-        public void IgnoreType(Type type)
+        public virtual void IgnoreType(Type type)
         {
             typesToIgnore.Add(type);
         }
@@ -53,7 +62,7 @@ namespace thirty
             functionMatches.Add(typeof (T), func);
         }
 
-        public IDictionary<Type, dynamic> GetFuncMatches()
+        public virtual IDictionary<Type, dynamic> GetFuncMatches()
         {
             return functionMatches;
         }
